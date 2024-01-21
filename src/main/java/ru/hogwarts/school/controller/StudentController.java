@@ -1,8 +1,11 @@
 package ru.hogwarts.school.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
+
+import java.util.List;
 
 @RestController
 public class StudentController {
@@ -29,6 +32,11 @@ public class StudentController {
     @PutMapping("{id}")
     public Student update(@PathVariable Long id, @RequestBody Student student) {
         return studentService.update(id,student);
+    }
+
+    @GetMapping
+    public List<Student> getByAge(int age) {
+        return studentService.getByAge(age);
     }
 
 }
