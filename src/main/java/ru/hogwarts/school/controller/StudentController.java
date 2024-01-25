@@ -8,6 +8,7 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.List;
 
 @RestController
+@RequestMapping("student")
 public class StudentController {
     StudentService studentService;
 

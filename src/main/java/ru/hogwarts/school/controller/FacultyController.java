@@ -5,7 +5,8 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.List;
-
+@RestController
+@RequestMapping("faculty")
 public class FacultyController {
     FacultyService facultyService;
 
