@@ -1,10 +1,22 @@
 package ru.hogwarts.school.model;
 
-import java.util.Objects;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+import java.util.Objects;
+@Entity
 public class Student {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
+
+    private int age;
+
+    public Student() {
+    }
 
     public Student(String name, int age) {
         this.name = name;
@@ -31,9 +43,6 @@ public class Student {
     public int hashCode() {
         return Objects.hash(id, name, age);
     }
-
-    private int age;
-
 
 
     public int getAge() {
