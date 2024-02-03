@@ -1,13 +1,17 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.List;
-
+@RestController
+@RequestMapping(value = "/faculty")
 public class FacultyController {
-    FacultyService facultyService;
+    private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
@@ -18,8 +22,9 @@ public class FacultyController {
         return facultyService.get(id);
     }
     @DeleteMapping("{id}")
-    public Faculty delete(@PathVariable Long id) {
-        return facultyService.delete(id);
+    public ResponseEntity<Faculty> delete(@PathVariable Long id) {
+        facultyService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
@@ -33,7 +38,18 @@ public class FacultyController {
     }
 
     @GetMapping
-    public List<Faculty> getByAge(String color) {
+    public List<Faculty> getByColor(String color) {
         return facultyService.getByColor(color);
+    }
+
+    @GetMapping(" getByNameOrColorIgnoreCase")
+    public List<Faculty> getByNameOrColorIgnoreCase(
+            @RequestParam String name,
+            @RequestParam String color){
+        return facultyService.getByNameOrColorIgnoreCase(name, color);
+    }
+    @GetMapping("{id}/students")
+    public List<Student> getStudents(@PathVariable long id){
+        return facultyService.getStudents(id);
     }
 }
