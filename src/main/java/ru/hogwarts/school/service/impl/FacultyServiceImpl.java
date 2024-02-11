@@ -1,7 +1,10 @@
 package ru.hogwarts.school.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.HashMap;
@@ -9,44 +12,59 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class FacultyServiceImpl implements FacultyService {
-    private Long idMaker = 0L;
+    private final FacultyRepository facultyRepository;
 
-    Map<Long, Faculty> faculties = new HashMap<>();
-
+    public FacultyServiceImpl(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     @Override
     public Faculty add(Faculty faculty) {
-        ++idMaker;
-        faculty.setId(idMaker);
-        faculties.put(idMaker, faculty);
+        facultyRepository.save(faculty);
         return faculty;
 
     }
 
     @Override
     public Faculty get(Long id) {
-        return faculties.get(id);
+        return facultyRepository.findById(id).orElse(null);
     }
 
     @Override
     public Faculty update(Long id, Faculty faculty) {
-        Faculty facultyFromStorage = faculties.get(id);
-        facultyFromStorage.setName(faculty.getName());
-        facultyFromStorage.setColor(faculty.getColor());
-        return facultyFromStorage;
+        return facultyRepository.findById(id).map(facultyFromDb -> {
+            facultyFromDb.setName(faculty.getName());
+            facultyFromDb.setColor(faculty.getColor());
+            return facultyRepository.save(facultyFromDb);
+        }).orElse(null);
     }
 
     @Override
-    public Faculty delete(Long id) {
-        return faculties.remove(id);
+    public void delete(Long id) {
+        facultyRepository.deleteById(id);
 
     }
 
     @Override
     public List<Faculty> getByColor(String color) {
-        return faculties.values().stream()
-                .filter(it-> it.getColor().equals(color))
+        return facultyRepository.findAll().stream()
+                .filter(it->it.getColor().equals(color))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Faculty> getByNameOrColorIgnoreCase(String name, String color) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(name, color);
+    }
+
+    @Override
+    public List<Student> getStudents (long id){
+        return facultyRepository.findById(id).map(Faculty::getStudents)
+                .orElse(null);
+
+    }
+
+
 }
