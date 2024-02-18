@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -79,6 +80,21 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findById(id)
                 .map(Student::getFaculty).orElse(null);
     }
+
+    public int getStudentCount() {
+        return studentRepository.getStudentCount();
+    }
+
+    public int getAvgYears() {
+        return studentRepository.getAvgYears();
+    }
+    public List<Student> getLastFive() {
+        return studentRepository.getLastFive();
+    }
+
+
+
+    //----------------------------For avatars----------------------------//
     @Override
     public Avatar findAvatar(long studentId) {
         return avatarRepository.findByStudentId(studentId).orElseThrow();
@@ -110,4 +126,12 @@ public class StudentServiceImpl implements StudentService {
     public String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
+
+    @Override
+    public List<Avatar> getPaginatedAvatar(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
+    }
+
+
 }

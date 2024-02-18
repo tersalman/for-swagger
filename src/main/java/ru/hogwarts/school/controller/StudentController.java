@@ -7,6 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.dto.AvatarDTO;
+import ru.hogwarts.school.mapper.AvatarMapper;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -19,20 +21,24 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/student")
 public class StudentController {
     private final StudentService studentService;
+    private final AvatarMapper avatarMapper;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, AvatarMapper avatarMapper) {
         this.studentService = studentService;
+        this.avatarMapper = avatarMapper;
     }
 
     @GetMapping("{id}")
     public Student get(@PathVariable Long id) {
         return studentService.get(id);
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Student> delete(@PathVariable Long id) {
         studentService.delete(id);
@@ -46,15 +52,16 @@ public class StudentController {
 
     @PutMapping("{id}")
     public Student update(@PathVariable Long id, @RequestBody Student student) {
-        return studentService.update(id,student);
+        return studentService.update(id, student);
     }
 
     @GetMapping
     public List<Student> getByAge(int age) {
         return studentService.getByAge(age);
     }
+
     @GetMapping("findByAgeBetween")
-    public List<Student>  findByAgeBetween(int ageFrom,int ageTo){
+    public List<Student> findByAgeBetween(int ageFrom, int ageTo) {
         return studentService.findByAgeBetween(ageFrom, ageTo);
     }
 
@@ -62,6 +69,24 @@ public class StudentController {
     public Faculty getFaculty(Long id) {
         return studentService.getFaculty(id);
     }
+
+    @GetMapping("getStudentCount")
+    public int getStudentCount() {
+        return studentService.getStudentCount();
+    }
+
+    @GetMapping("getAvgYears")
+    public int getAvgYears() {
+        return studentService.getAvgYears();
+    }
+
+    @GetMapping("getLastFive")
+    public List<Student> getLastFive() {
+        return studentService.getLastFive();
+    }
+
+
+    //-----------------------------for avatar------------------------------//
     @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
         if (avatar.getSize() > 1024 * 300) {
@@ -71,6 +96,7 @@ public class StudentController {
         studentService.uploadAvatar(id, avatar);
         return ResponseEntity.ok().build();
     }
+
     @GetMapping(value = "/{id}/avatar/preview")
     public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
         Avatar avatar = studentService.findAvatar(id);
@@ -95,6 +121,17 @@ public class StudentController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+
+    @GetMapping("avatar")
+    public List<AvatarDTO> getPaginateAvatar(
+            @RequestParam int pageNumber,
+            @RequestParam int pageSize
+    ) {
+        return studentService.getPaginatedAvatar(pageNumber, pageSize)
+                .stream()
+                .map(avatarMapper::mapToDTO)
+                .collect(Collectors.toList());
     }
 
 }
