@@ -1,8 +1,9 @@
 package ru.hogwarts.school.mapper;
 
+import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.AvatarDTO;
 import ru.hogwarts.school.model.Avatar;
-
+@Service
 public class AvatarMapper {
 
     public AvatarDTO mapToDTO(Avatar avatar) {

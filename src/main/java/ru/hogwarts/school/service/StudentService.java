@@ -30,12 +30,6 @@ public interface StudentService {
     int getAvgYears();
     List<Student> getLastFive();
 
-    public Avatar findAvatar(long studentId);
 
-    void uploadAvatar(Long id, MultipartFile avatar) throws IOException;
-
-    String getExtension(String fileName);
-
-    List<Avatar> getPaginatedAvatar(int pageNumber, int pageSize);
 
 }

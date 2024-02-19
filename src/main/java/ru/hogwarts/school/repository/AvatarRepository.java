@@ -11,6 +11,6 @@ import java.util.Optional;
 
         Optional<Avatar> findByStudentId(Long studentId);
 
-        List<Avatar> getPaginatedAvatar(int pageNumber, int pageSize);
+
 
 }
