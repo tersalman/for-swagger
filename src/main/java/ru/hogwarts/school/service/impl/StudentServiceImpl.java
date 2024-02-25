@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
 
     private final StudentRepository studentRepository;
@@ -26,6 +29,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student add(Student student) {
+        logger.info("add method was invoked");
         studentRepository.save(student);
         return student;
 
@@ -33,11 +37,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student get(Long id) {
+        logger.info("get method was invoked");
        return studentRepository.findById(id).orElse(null);
     }
 
     @Override
     public Student update(Long id, Student student) {
+        logger.info("update method was invoked");
         return studentRepository.findById(id).map(studentFromDb -> {
             studentFromDb.setName(student.getName());
             studentFromDb.setAge(student.getAge());
@@ -47,12 +53,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Long id) {
+        logger.info("delete method was invoked");
         studentRepository.deleteById(id);
 
     }
 
     @Override
     public List<Student> getByAge(int age) {
+        logger.info("getByAge method was invoked");
         return studentRepository.findAll().stream()
                 .filter(it->it.getAge()==age)
                 .collect(Collectors.toList());
@@ -60,23 +68,28 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findByAgeBetween(int ageFrom, int ageTo) {
+        logger.info("findByAgeBetween method was invoked");
         return studentRepository.findByAgeBetween(ageFrom, ageTo);
     }
 
     @Override
     public Faculty getFaculty(Long id) {
+        logger.info("getFaculty method was invoked");
         return studentRepository.findById(id)
                 .map(Student::getFaculty).orElse(null);
     }
 
     public int getStudentCount() {
+        logger.info("getStudentCount method was invoked");
         return studentRepository.getStudentCount();
     }
 
     public int getAvgYears() {
+        logger.info("getAvgYears method was invoked");
         return studentRepository.getAvgYears();
     }
     public List<Student> getLastFive() {
+        logger.info("getLastFive method was invoked");
         return studentRepository.getLastFive();
     }
 

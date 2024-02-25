@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AvatarServiceImpl.class);
+
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
@@ -33,10 +38,12 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public Avatar findAvatar(long studentId) {
+        logger.info("findAvatar method was invoked");
         return avatarRepository.findByStudentId(studentId).orElseThrow();
     }
     @Override
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.info("uploadAvatar method was invoked");
         Student student = studentRepository.getById(studentId);
 
         Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
@@ -60,11 +67,13 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     public String getExtension(String fileName) {
+        logger.info("getExtension method was invoked");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     @Override
     public List<Avatar> getPaginatedAvatar(int pageNumber, int pageSize) {
+        logger.info("getPaginatedAvatar method was invoked");
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }
