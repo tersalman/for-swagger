@@ -71,7 +71,24 @@ public class StudentController {
         return studentService.getLastFive();
     }
 
+    @GetMapping("startWithA")
+    public List<String> getAllStudentsStartsWithA() {
+        return studentService.getAllStudentsStartsWithA();
+    }
 
+    @GetMapping("averageAge")
+    public Double getAverageAge(){
+        return studentService.getAverageAge();
+    }
+
+    @GetMapping("print-parallel")
+    public void printParallel(){
+        studentService.printParallel();
+    }
+    @GetMapping("print-synchronized")
+    public void printSynchronized(){
+      studentService.printSynchronized();
+    }
     //-----------------------------for avatar------------------------------//
 
 }

@@ -1,11 +1,8 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
-import java.io.IOException;
 import java.util.List;
 public interface StudentService {
 
@@ -30,6 +27,10 @@ public interface StudentService {
     int getAvgYears();
     List<Student> getLastFive();
 
+    List<String> getAllStudentsStartsWithA();
+    Double getAverageAge();
+    void printParallel();
+    void printSynchronized();
 
 
 }

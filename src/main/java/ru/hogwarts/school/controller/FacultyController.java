@@ -1,16 +1,20 @@
 package ru.hogwarts.school.controller;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.List;
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping(value = "/faculty")
 public class FacultyController {
+
+
     private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
@@ -21,6 +25,7 @@ public class FacultyController {
     public Faculty get(@PathVariable Long id) {
         return facultyService.get(id);
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Faculty> delete(@PathVariable Long id) {
         facultyService.delete(id);
@@ -34,7 +39,7 @@ public class FacultyController {
 
     @PutMapping("{id}")
     public Faculty update(@PathVariable Long id, @RequestBody Faculty faculty) {
-        return facultyService.update(id,faculty);
+        return facultyService.update(id, faculty);
     }
 
     @GetMapping
@@ -45,11 +50,17 @@ public class FacultyController {
     @GetMapping(" getByNameOrColorIgnoreCase")
     public List<Faculty> getByNameOrColorIgnoreCase(
             @RequestParam String name,
-            @RequestParam String color){
+            @RequestParam String color) {
         return facultyService.getByNameOrColorIgnoreCase(name, color);
     }
+
     @GetMapping("{id}/students")
-    public List<Student> getStudents(@PathVariable long id){
+    public List<Student> getStudents(@PathVariable long id) {
         return facultyService.getStudents(id);
+    }
+
+    @GetMapping("longestname")
+    public String getLongestName(){
+        return facultyService.getLongestName();
     }
 }

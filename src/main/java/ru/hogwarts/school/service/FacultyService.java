@@ -1,6 +1,5 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
@@ -20,4 +19,6 @@ public interface FacultyService {
     List<Faculty> getByNameOrColorIgnoreCase(String name, String color);
 
     List<Student> getStudents(long id);
+
+    String getLongestName();
 }
